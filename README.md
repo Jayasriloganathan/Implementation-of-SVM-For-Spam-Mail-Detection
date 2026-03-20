@@ -24,48 +24,58 @@ RegisterNumber: 212224040136
 ```
 ```
 import chardet
-file='/content/spam.csv'
-with open(file, 'rb') as rawdata:
-    result = chardet.detect(rawdata.read(100000))
-result
+
+with open('spam.csv', 'rb') as file:
+    encoding = chardet.detect(file.read(100000))
+print(encoding)
+
 
 import pandas as pd
-data=pd.read_csv("/content/spam.csv", encoding='Windows-1252')
 
-data.head()
-data.info()
+data = pd.read_csv('spam.csv', encoding='Windows-1252')
 
-data.isnull().sum()
+print(data.head())
+print(data.isnull().sum())
 
-x=data["v1"].values
-y=data["v2"].values
+
+X = data['v2']   
+y = data['v1']  
+
 
 from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=0)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=0
+)
+
 
 from sklearn.feature_extraction.text import CountVectorizer
-cv = CountVectorizer()
 
-x_train=cv.fit_transform(x_train)
-x_test=cv.transform(x_test)
+vectorizer = CountVectorizer()
+
+X_train = vectorizer.fit_transform(X_train)
+X_test = vectorizer.transform(X_test)
+
 
 from sklearn.svm import SVC
-svc=SVC()
-svc.fit(x_train,y_train)
 
-y_pred=svc.predict(x_test)
-y_pred
+model = SVC()
+model.fit(X_train, y_train)
 
-from sklearn import metrics
-accuracy=metrics.accuracy_score(y_test,y_pred)
-accuracy
+
+y_pred = model.predict(X_test)
+
+print("Predicted values:", y_pred)
+
+
+from sklearn.metrics import accuracy_score
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
 
 ```
 ## Output:
 
-<img width="866" height="914" alt="image" src="https://github.com/user-attachments/assets/27228b69-0e43-4c29-9966-e217855fd9de" />
-
-<img width="867" height="303" alt="image" src="https://github.com/user-attachments/assets/3459c1e0-8d6b-4323-8f45-da7e647bc970" />
+<img width="1542" height="627" alt="image" src="https://github.com/user-attachments/assets/cd32fec5-6406-40ac-ad81-f7ba18f2a45d" />
 
 
 ## Result:
